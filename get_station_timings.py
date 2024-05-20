@@ -3,8 +3,9 @@ from dateutil.parser import parse
 import requests
 from get_station_codes import lines_with_codes as lines
 
+KEY = None
 with open('key.env') as keyfile:
-    KEY = keyfile.readline().split('=', 1)
+    KEY = keyfile.readline().split('=')[1]
 
 LINE_CODES = {
     "BROWN": "Brn",
