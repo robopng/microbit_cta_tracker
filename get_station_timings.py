@@ -3,7 +3,9 @@ from dateutil.parser import parse
 import requests
 from get_station_codes import lines_with_codes as lines
 
-KEY = """6dd9e6c145b046bf916c32cb83f56949"""
+# This is not a security critical key, but it's been removed regardless.
+KEY = """~"""
+
 LINE_CODES = {
     "BROWN": "Brn",
     "RED": "Red",
