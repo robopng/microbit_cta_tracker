@@ -20,7 +20,7 @@ from micropython import const
 import radio
 
 TEXT_DELAY = const(135)
-TEXT_DELAY_FAST = const(100)
+TEXT_DELAY_FAST = const(110)
 TEXT_WAIT = True
 TEXT_LOOP = False
 TEXT_CLEAR = True
@@ -55,33 +55,53 @@ def scan_input():
 
 
 def on_a():
-    radio.send("SWITCH")
+    global direction
+    direction = (direction + 1) % 2
+    show_text(times[direction][:-2], speed=TEXT_DELAY_FAST)
 
 
 def on_b():
     radio.send("UPDATE")
 
 
+def process_command(command):
+    """
+    Process a command code for its respective consequence.
+    :param command: command code to be processed
+    """
+    # add more in an elif chain
+    if command == 'SWITCH': on_a()
+
+
 def go():
     """
     Begin receiving input from the sending micro:bit device.
-    Process input as either an intial ('B') message, or continuous ('M')
-    message.
-    :return:
+    Process input as either an intial ('B'), continuous ('M'), or
+    service ('S') message.
     """
+    global times
     radio.on()
     while True:
         message = radio.receive()
         if message:
             # B messages are of the format X on the Y line
             if message[0] == 'B':
-                show_text(message[1:message.index(' ')])
-                display.show(message[message.index(' ') + 1:], delay=100, clear=True)
+                try:
+                    space = message.index(' on ')
+                except ValueError:
+                    # some kind of mangling occurred in transmission
+                    space = message.index(' ')
+                show_text(message[1:space])
+                display.show(message[space + 1:], delay=TEXT_DELAY_FAST, clear=True)
             # M messages are of the format X Y
             elif message[0] == 'M':
                 message = message[1:]
-                show_text(message[:-2], speed=TEXT_DELAY_FAST)
-                display.show(message[-1])
+                times = message.split('|')
+                show_text(times[direction][:-2], speed=TEXT_DELAY_FAST)
+            elif message[0] == 'S':
+                message = message[1:]
+                process_command(message)
+        display.show(times[direction][-1])
         scan_input()
 
 
@@ -89,6 +109,8 @@ def go():
 # sender_dynamic.py and sender_main.py
 radio.config(group=0)
 
+direction = 0
+times = ('None: X', 'None: X')
 # await initial input
 while scan_input() == -1: display.show(Image.ARROW_E)
 display.clear()

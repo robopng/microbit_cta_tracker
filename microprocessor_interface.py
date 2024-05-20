@@ -25,8 +25,7 @@ def write_dynamic(times):
     with open(out_path, mode='w') as file:
         file.write(file_contents)
         file.write(
-            f'timing = "{times[0]}"\n'
-            f'timing_alt = "{times[1]}"\n'
+            f'timing = "{times[0]}|{times[1]}"\n'
             f'go()\n'
         )
 

@@ -1,6 +1,7 @@
 import shutil
 import subprocess
 import os
+import time
 
 
 def convert(path):
@@ -21,4 +22,11 @@ def push(path):
     :param path: path to the .hex code file
     """
     path = os.path.join(os.getcwd(), path)
-    shutil.copyfile(path, "D:/script.hex")
+    # keep trying to move the file for flashing until successful
+    while True:
+        try:
+            shutil.copyfile(path, "D:/script.hex")
+            break
+        except PermissionError:
+            print('Permission failed on copyfile! Trying again...')
+
