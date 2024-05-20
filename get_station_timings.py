@@ -3,8 +3,8 @@ from dateutil.parser import parse
 import requests
 from get_station_codes import lines_with_codes as lines
 
-# This is not a security critical key.
-KEY = """6dd9e6c145b046bf916c32cb83f56949"""
+with open('key.env') as keyfile:
+    KEY = keyfile.readline().split('=', 1)
 
 LINE_CODES = {
     "BROWN": "Brn",
