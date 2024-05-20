@@ -1,5 +1,6 @@
 """
 Handle all serial communication with the sending micro:bit device.
+Version: 1.1.2
 """
 
 from script_to_hex import convert, push
