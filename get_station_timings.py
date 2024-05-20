@@ -4,6 +4,16 @@ import requests
 from get_station_codes import lines_with_codes as lines
 
 KEY = """6dd9e6c145b046bf916c32cb83f56949"""
+LINE_CODES = {
+    "BROWN": "Brn",
+    "RED": "Red",
+    "BLUE": "Blue",
+    "YELLOW": "Y",
+    "PURPLE": "P",
+    "PINK": "Pnk",
+    "ORANGE": "O",
+    "GREEN": "Green"
+}
 
 
 def timing(station_name, station_line):
@@ -14,8 +24,8 @@ def timing(station_name, station_line):
     less than 1 minute away is considered approaching for the purposes of
     this program.
     """
-    times = [None, None]
-    grabbed_destinations = [None, None]
+    times = ['X', 'X']
+    grabbed_destinations = ['None', 'None']
     mapid = lines[station_line][station_name]
 
     # do not error handle this; debugging micro:bits is hard
@@ -34,9 +44,11 @@ def timing(station_name, station_line):
     all_arrivals_field = 'eta'
     dest_name_field = 'destNm'
     arrival_time_field = 'arrT'
+    line_field = 'rt'
     full_request = full_request[wrapping_field]
     for arrival in full_request[all_arrivals_field]:
-        if arrival[dest_name_field] not in grabbed_destinations:
+        if arrival[dest_name_field] not in grabbed_destinations\
+                and arrival[line_field] == LINE_CODES[station_line]:
             grabbed_destinations[i] = arrival[dest_name_field]
             times[i] = arrival[arrival_time_field]
             i += 1
@@ -48,13 +60,17 @@ def timing(station_name, station_line):
         # divmod gives desirable results with rounding
         # convert time to datetime object, find out how far away it is from
         # the current time, and then divide for the difference in minutes
-        times[i] = int(divmod(
-            (parse(times[i]) - datetime.now()).total_seconds(),
-            60
-        )[0])
-        # stylistic choices
-        if times[i] > 9: times[i] = 'X'
-        elif times[i] <= 1: times[i] = 'A'
+        try:
+            times[i] = int(divmod(
+                (parse(times[i]) - datetime.now()).total_seconds(),
+                60
+            )[0])
+            # stylistic choices
+            if times[i] > 9: times[i] = 'X'
+            elif times[i] <= 1: times[i] = 'A'
+        # if times[i] is an X for no times found
+        except:
+            pass
 
         times[i] = f'{grabbed_destinations[i]}: {str(times[i])}'
 

@@ -74,6 +74,6 @@ radio.config(group=0)
 
 # AUTO-GENERATED BELOW THIS LINE
 # ------------------------------
-timing = "54th/Cermak: 2"
-timing_alt = "Midway: 2"
+timing = "Kimball: X"
+timing_alt = "Loop: 2"
 go()
