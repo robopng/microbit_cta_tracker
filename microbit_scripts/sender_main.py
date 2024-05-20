@@ -172,7 +172,7 @@ def show_text(text, speed=TEXT_DELAY, wait=TEXT_WAIT, loop=TEXT_LOOP):
 
 # MAKE SURE this number is identical to the ones defined in
 # sender_dynamic.py and receiver_main.py
-radio.config(group=0)
+radio.config(group=0, size=128)
 mode = "MAIN_MENU"
 
 refresh()

@@ -59,18 +59,20 @@ def go():
                 # loading icon
                 display.show(Image('00300:03630:36063:03630:00300'))
                 sleep(500)
-            if 'SWITCH' in message:
-                # b button controls switch functionality
-                on_b()
-                # loading icon
-                display.show(Image('00300:03630:36063:03630:00300'))
+            # elif 'SWITCH' in message:
+            #     # b button controls switch functionality
+            #     on_b()
+            #     # loading icon
+            #     display.show(Image('00300:03630:36063:03630:00300'))
                 sleep(1500)
+            else:
+                print(message)
         scan_input()
 
 
 # MAKE SURE this number is identical to the ones defined in
 # sender_main.py and sender_main.py
-radio.config(group=0)
+radio.config(group=0, length=128)
 
 # AUTO-GENERATED BELOW THIS LINE
 # ------------------------------

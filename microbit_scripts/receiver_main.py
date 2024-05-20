@@ -61,6 +61,8 @@ def on_a():
 
 
 def on_b():
+    global times
+    times = ['None: X', 'None: X']
     radio.send("UPDATE")
 
 
@@ -86,12 +88,8 @@ def go():
         if message:
             # B messages are of the format X on the Y line
             if message[0] == 'B':
-                try:
-                    space = message.index(' on ')
-                except ValueError:
-                    # some kind of mangling occurred in transmission
-                    space = message.index(' ')
-                show_text(message[1:space])
+                space = message.index(' ON ')
+                show_text(message[1:space], wait=True)
                 display.show(message[space + 1:], delay=TEXT_DELAY_FAST, clear=True)
             # M messages are of the format X Y
             elif message[0] == 'M':
@@ -107,7 +105,7 @@ def go():
 
 # MAKE SURE this number is identical to the ones defined in
 # sender_dynamic.py and sender_main.py
-radio.config(group=0)
+radio.config(group=0, length=128)
 
 direction = 0
 times = ('None: X', 'None: X')
