@@ -16,8 +16,8 @@ def write_dynamic(times):
     :param times: the times to be given to the sending micro:bit device
     :return: the path to the complete sender_dynamic script
     """
-    dyn_script_path = 'microbit_scripts/sender_dynamic.py'
-    out_path = f'microbit_scripts/__temp_dynamic_out.py'
+    dyn_script_path = './microbit_scripts/sender_dynamic.py'
+    out_path = f'./microbit_scripts/__temp_dynamic_out.py'
 
     with open(dyn_script_path, mode='r') as file:
         file_contents = file.read()
