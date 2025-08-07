@@ -2,10 +2,7 @@ from datetime import datetime
 from dateutil.parser import parse
 import requests
 from get_station_codes import lines_with_codes as lines
-
-KEY = None
-with open('key.env') as keyfile:
-    KEY = keyfile.readline().split('=')[1]
+from general.query_form import train_stop_query as query
 
 LINE_CODES = {
     "BROWN": "Brn",
@@ -32,13 +29,7 @@ def timing(station_name, station_line):
     mapid = lines[station_line][station_name]
 
     # do not error handle this; debugging micro:bits is hard
-    url = (
-            f'http://lapi.transitchicago.com/api/1.0/'
-            + f'ttarrivals.aspx'
-            + f'?key={KEY}'
-            + f'&mapid={mapid}'
-            + f'&outputType=JSON'
-    )
+    url = query.replace('{mapid}', mapid)
     full_request = requests.get(url).json()
 
     # scrape for the soonest arrival in either direction
@@ -48,6 +39,7 @@ def timing(station_name, station_line):
     dest_name_field = 'destNm'
     arrival_time_field = 'arrT'
     line_field = 'rt'
+
     full_request = full_request[wrapping_field]
     for arrival in full_request[all_arrivals_field]:
         if arrival[dest_name_field] not in grabbed_destinations\
@@ -65,9 +57,11 @@ def timing(station_name, station_line):
         # the current time, and then divide for the difference in minutes
         try:
             times[i] = int(divmod(
-                (parse(times[i]) - datetime.now()).total_seconds(),
-                60
-            )[0])
+                (
+                    parse(times[i]) - datetime.now()).total_seconds(),
+                    60
+                )[0]
+            )
             # stylistic choices
             if times[i] > 9: times[i] = 'X'
             elif times[i] <= 1: times[i] = 'A'

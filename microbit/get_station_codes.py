@@ -6,7 +6,7 @@ with those stops.
 
 import csv
 
-data_file_name = "stops.csv"
+data_file_name = "../stops.csv"
 red_line = {}
 blue_line = {}
 green_line = {}
@@ -41,3 +41,4 @@ with open(data_file_name) as stops:
                 # for our purposes. it's just redundant, but that's ok
                 # lines[BROWN][PAULINA] = 41310
                 lines_with_codes[line][stop[name_col]] = stop[map_id_col]
+                break
